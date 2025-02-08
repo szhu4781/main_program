@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function (){
 
     let i = 0;
     let is_animate = false;
-
+      
+    //Function for updating image when using slider
     function updateImage(direction){
         //Prevents multiple clicks during transition
         if(is_animate) return;
@@ -119,10 +120,12 @@ document.addEventListener("DOMContentLoaded", function (){
         
     }, 500);
 
+    //Close button for modal
     close.addEventListener("click", function (){
         modal.style.display = "none";
     });
 
+    //Click anywhere on screen to close modal
     modal.addEventListener("click", function (e){
         if(e.target === modal){
             modal.style.display = "none";
@@ -131,6 +134,4 @@ document.addEventListener("DOMContentLoaded", function (){
 
     document.querySelector('.left').addEventListener('click', prevImage);
     document.querySelector('.right').addEventListener('click', nextImage);
-
-    
 });
