@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery | Lenscape</title>
+    <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+    <header id="header">
+        <h1>Lenscape</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="gallery.html">Home</a></li>
+            <li><a href="upload.html">Upload</a></li>
+          </ul>
+    </nav>
+
+    <div class="image_display">
+        <div class="slider">
+            <button class="left" onclick="prevImage()">❮</button>
+            <div class="container">
+                <img src="../images/1.jpg" class="prev_img" alt="Previous Image">
+                <img src="../images/2.jpg" class="current_img" alt="Current Image">
+                <img src="../images/3.jpg" class="next_img" alt="Next Image">
+            </div>
+            <button class="right" onclick="nextImage()">❯</button>
+        </div>
+    </div>
+
+    <script src="gallery.js"></script>
+</body>
+</html>
