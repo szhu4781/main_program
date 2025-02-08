@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery | Lenscape</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='gallery/gallery.css') }}">
+</head>
+<body>
+    <header id="header">
+        <h1>Lenscape</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/gallery">Home</a></li>
+            <li><a href="upload.html">Upload</a></li>
+          </ul>
+    </nav>
+
+    <div class="image_display">
+        <div class="slider">
+            <button class="left">❮</button>
+            <div class="container">
+                <img id="prev_img" src="{{ url_for('static', filename='images/' + prev_img) }}" class="prev_img" alt="Previous Image">
+                <img id="current_img" src="{{ url_for('static', filename='images/' + current_img) }}" class="current_img" alt="Current Image">
+                <img id="next_img" src="{{ url_for('static', filename='images/' + next_img) }}" class="next_img" alt="Next Image">
+            </div>
+            <button class="right">❯</button>
+        </div>
+    </div>
+
+    <!--Full-Sized Image Modal-->
+    <div id="modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="full-size-image">
+        <button class="display-info">Image Info</button>
+        <div id="image-info" class="image-info"></div>
+    </div>
+
+    <script>
+        const images = [
+            {% for image in images %}
+                "{{ url_for('static', filename='images/' + image)}}",
+            {% endfor %}
+        ];
+    </script>
+    <script src="{{ url_for('static', filename='gallery/gallery.js') }}"></script>
+</body>
+</html>
