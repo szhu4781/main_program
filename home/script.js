@@ -1,6 +1,6 @@
 // Function for redirecting to the gallery page
 function redirect(){
-    window.location.href="gallery/gallery.html";
+    window.location.href="../gallery/gallery.html";
 }
 
 document.addEventListener("DOMContentLoaded", function (){
