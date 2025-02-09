@@ -3,12 +3,14 @@ import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = ''
+app.secret_key = 'c30cbe0237eb99a421b130d09ea75990'
 
 # Configuring upload folder and allowed file formats
 UPLOAD_FOLDER = os.path.join(app.static_folder, 'images')
 SUFFIX = {'png', 'jpg', 'jpeg', 'svg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Check for allowed file format
 def file_format(filename):
@@ -59,7 +61,7 @@ def upload():
         # Redirect to the gallery page after successful upload
         if file and file_format(file.filename):
             filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD FOLDER'], filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
             flash('File uploaded successfully')
             return redirect(url_for('gallery'))
