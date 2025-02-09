@@ -103,6 +103,10 @@ document.addEventListener("DOMContentLoaded", function (){
             infoDiv.style.display = "none";
         }
         else {
+            const filename = modalImg.src.split('/').pop();
+            const uploadDate = imgDates[filename];
+
+            infoDiv.innerHTML = `<p>Uploaded on: ${uploadDate}</p>`;
             infoDiv.style.display = "block";
         }
     })
