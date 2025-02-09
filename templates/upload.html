@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Image | Lenscape</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='upload/upload.css') }}">
+</head>
+<body>
+    <header id="header">
+        <h1>Lenscape</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/gallery">Home</a></li>
+            <li><a href="/upload">Upload</a></li>
+          </ul>
+    </nav>
+
+    <h1>Upload Image</h1>
+    <p>
+        Attach your image by clicking the upload box below or simply
+        drag your image onto the box below. Click the 'Upload' button
+        when ready, otherwise click the 'Cancel' button to navigate
+        back to the gallery.
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-message">
+                {% for category, message in messages %}
+                    <p class="{{category}}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data" action="/upload">
+        <input type="file" name="file" id="file-input" required hidden multiple>
+        <label for="file-input" class="upload-container">
+            <div class="drag-drop">
+                <p>Select from files or drag and drop images here</p>
+                <div class="add-icon">
+                    <h1>+</h1>
+                </div>
+                <p>File formats: .jpg, .jpeg, .png, .svg</p>
+            </div>
+        </label>  
+        <p id="file-name" style="display: none;">No file selected</p>
+
+        <input type="submit" value="Upload">
+        <button type="button" onclick="window.location.href='/gallery'" class="cancel-btn">Cancel</button>
+    </form>
+ 
+    <script src="{{ url_for('static', filename='upload/upload.js') }}"></script>
+</body>
+</html>

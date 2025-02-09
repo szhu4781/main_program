@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(54, 54, 54);
+    overflow-x: hidden;
+    font-family: Merriweather;
+    color: rgb(236, 236, 236);
+}
+
+header{
+    position: relative;
+    width: 100vw;
+    height: 40vh;
+    border-top: 1px solid rgb(126, 126, 126);
+    border-bottom: 1px solid rgb(126, 126, 126);
+}
+
+header::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/2.jpg');
+    background-size: 100vw 120vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.5;
+    z-index: -1;
+}
+
+header::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 100, 100);
+    z-index: -2;
+}
+
+header>h1{
+    padding: 1% 0 0 70%;
+    font-size: 48px;
+    -webkit-text-stroke: 2px;
+    -webkit-text-stroke-color: black;
+}
+
+nav{
+    position: relative;
+    left: 0;
+    background-color: rgb(155, 155, 155);
+    width: 15vw;
+    height: 200vh;
+    font-size: 24px;
+    float: left;
+}
+
+nav>ul{
+    list-style: none;
+}
+
+nav>ul>li>a{
+    display: block;
+    text-decoration: none;
+    line-height: 100px;
+    color: white;
+    margin-right: 50px;
+    text-align: center;
+}
+
+p{
+    font-size: 30px;
+    margin: 20px 15px 0 15px;
+}
+
+.upload-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30vw;
+    aspect-ratio: 1/1;
+    background-color: rgb(203, 203, 203);
+    border: 7px solid rgb(181, 181, 181);
+    text-align: center;
+    margin-top: 10vh;
+    margin-left: 40vw;
+    padding: 20px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.drag-drop{
+    width: 28vw;
+    aspect-ratio: 1/1;
+    background-color: rgb(191, 191, 191);
+    border: 8px dashed rgb(167, 167, 167);
+    align-items: center;
+    padding: 5px;
+    font-size: 30px;
+    font-family: Montserrat Alternates;
+    font-weight: 700;
+    color: rgb(149, 149, 149);
+}
+
+.add-icon{
+    background-color: rgba(161, 161, 161, 0.7);
+    margin-left: 9vw;
+    width: 150px;
+    height: 150px;
+    border: none;
+    border-radius: 50%;
+    align-items: center;
+}
+
+.add-icon>h1{
+    position: relative;
+    top: 25px;
+    font-size: 84px;
+}
+
+input[type="submit"]{
+    background-color: rgb(48, 153, 205);
+    color: white;
+    margin: 50px 100px 0 0;
+    width: 15%;
+    height: 10vh;
+    border: 1px solid white;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 30px;
+    font-family: Montserrat Alternates;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cancel-btn{
+    background-color: rgb(225, 38, 38);
+    color: white;
+    margin: 50px 0 0 0;
+    width: 15%;
+    height: 10vh;
+    border: 1px solid white;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 30px;
+    font-family: Montserrat Alternates;
+    font-weight: bold;
+    cursor: pointer;
+}
