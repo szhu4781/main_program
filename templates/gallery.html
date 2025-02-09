@@ -9,6 +9,8 @@
 <body>
     <header id="header">
         <h1>Lenscape</h1>
+
+        <button type="button" onclick="window.location.href='/upload'" class="cancel-btn">Upload</button>
     </header>
 
     <nav>
@@ -57,13 +59,18 @@
         <div id="image-info" class="image-info"></div>
     </div>
 
+    <!--Script for image display-->
     <script>
         const images = [
             {% for image in images %}
                 "{{ url_for('static', filename='images/' + image)}}",
             {% endfor %}
         ];
+
+        const imgDates = {{ image_dates|tojson }};
     </script>
+
+    <!--Script for js-->
     <script src="{{ url_for('static', filename='gallery/gallery.js') }}"></script>
 </body>
 </html>
