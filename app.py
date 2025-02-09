@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'c30cbe0237eb99a421b130d09ea75990'
@@ -36,7 +37,15 @@ def gallery():
     prev_img = image_files[-1]  # Last image is the previous image for the first slide
     next_img = image_files[1] if len(image_files) > 1 else current_img
 
-    return render_template('gallery.html', images=image_files, prev_img=prev_img, current_img=current_img, next_img=next_img)
+    # Get the upload date for each image
+    image_date = {}
+    for image in image_files:
+        image_path =  os.path.join(image_folder, image)
+        timestamp = os.path.getctime(image_path)
+        date_format = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        image_date[image] = date_format
+
+    return render_template('gallery.html', images=image_files, prev_img=prev_img, current_img=current_img, next_img=next_img, image_dates=image_date)
 
 # Route to access image folder
 @app.route('/images/<image_name>')
