@@ -93,6 +93,11 @@ p{
     padding: 20px;
     overflow: hidden;
     cursor: pointer;
+    transition: border 0.3s ease-in-out;
+}
+
+.upload-container.dragover{
+    border: 8px solid rgb(120, 120, 120);
 }
 
 .drag-drop{
