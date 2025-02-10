@@ -55,29 +55,31 @@ def get_images(image_name):
 # Route to upload.html
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    # Check for existing files in POST request
     if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file found in request')
+        if 'files' not in request.files:
+            flash('No files found in request')
             return redirect(request.url)
-        file = request.files['file']
 
-        # Check if any files are selected
-        if file.filename == '':
+        files = request.files.getlist('files')  # Get multiple files
+
+        if not files or all(file.filename == '' for file in files):
             flash('No files selected')
             return redirect(request.url)
+
+        uploaded_files = []
+
+        for file in files:  
+            if file and file_format(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                uploaded_files.append(filename)
         
-        # Redirect to the gallery page after successful upload
-        if file and file_format(file.filename):
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            flash('File uploaded successfully')
+        if uploaded_files:
+            flash(f'Successfully uploaded: {", ".join(uploaded_files)}')
             return redirect(url_for('gallery'))
-        
         else:
-            flash('Invalid file type. Try again.')
-            return redirect(request.url)
+            flash('No valid files. Try again.')
         
     return render_template('upload.html')
 
