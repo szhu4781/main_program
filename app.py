@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = 'c30cbe0237eb99a421b130d09ea75990'
+app.secret_key = 'secret_key'
 
 # Configuring upload folder and allowed file formats
 UPLOAD_FOLDER = os.path.join(app.static_folder, 'images')
