@@ -1,6 +1,6 @@
 # CS361-main_program
-# Version: v1.0.2
-# Last Update: 02/10/2025
+## Version: v1.0.2
+## Last Update: 02/10/2025
 
 ## Author: Shengwei Zhu
 
