@@ -39,15 +39,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Confirmation for upload
     uploadForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
         if (selectedFiles.length === 0) {
             alert("No files selected.");
-            event.preventDefault();
             return;
         }
 
         const userConfirmed = confirm("Are you sure you want to upload these images? They can be viewed by anyone at any given time.");
         if (!userConfirmed) {
-            event.preventDefault();
             return;
         }
 
@@ -60,16 +60,18 @@ document.addEventListener('DOMContentLoaded', function () {
             method: "POST",
             body: formData
         })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
-            alert("Upload successful!");
-            window.location.href = "/gallery";
+            if(data.status === "error"){
+                alert(data.message);
+            } else if (data.status === "success"){
+                alert(data.message);
+                window.location.href = "/gallery";
+            }
         })
         .catch(error => {
             alert("Upload failed. Try again.");
         });
-
-        event.preventDefault();
     });
 
     // Function for updating the display of files chosen
