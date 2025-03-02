@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", function (){
+    //Variables for full-size image display
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("full-size-image");
     const close = document.querySelector(".close")
     const infoButton = document.querySelector(".display-info");
     const infoDiv = document.getElementById("image-info");
 
+    //Variables for slider animation
     let i = 0;
     let is_animate = false;
       
@@ -97,10 +99,16 @@ document.addEventListener("DOMContentLoaded", function (){
 
     //Toggle image info
     infoButton.addEventListener("click", function (){
+        //Get the filename of current image and fetch
+        //its average rating
+        const imageId = modalImg.src.split('/').pop();
+        fetchAvgRating(imageId);
+
         //Hide info if it's already displayed and
         //user clicks on the button
         if(infoDiv.style.display === "block"){
             infoDiv.style.display = "none";
+            modal.style.maxHeight = "100%";
         }
         else {
             const filename = modalImg.src.split('/').pop();
@@ -108,16 +116,19 @@ document.addEventListener("DOMContentLoaded", function (){
 
             infoDiv.innerHTML = `<p>Uploaded on: ${uploadDate}</p>`;
             infoDiv.style.display = "block";
+            modal.style.maxHeight = "100%";
         }
     })
 
+    //Delay for opening full-sized image
     setTimeout(() => {
         const images = document.querySelectorAll(".current_img");
 
-        //For full-sized image modal
+        //Displays the full-sized image modal
         images.forEach(img => {
             img.addEventListener("click", function () {
                 modal.style.display = "flex";
+                document.body.classList.add("no-scroll");
                 modalImg.src = img.src;
             });
         });
@@ -127,15 +138,38 @@ document.addEventListener("DOMContentLoaded", function (){
     //Close button for modal
     close.addEventListener("click", function (){
         modal.style.display = "none";
+        document.body.classList.remove("no-scroll");
     });
 
     //Click anywhere on screen to close modal
     modal.addEventListener("click", function (e){
         if(e.target === modal){
             modal.style.display = "none";
+            document.body.classList.remove("no-scroll");
         }
     });
 
+    //Click events for the image slider buttons
     document.querySelector('.left').addEventListener('click', prevImage);
     document.querySelector('.right').addEventListener('click', nextImage);
+
+    //------------------------------------------------------------------------------------//    
+    //Microservice A Integration: Image Rating System designed by Joseph Messer
+    //------------------------------------------------------------------------------------//
+
+    //Function for fetching average ratings for each image
+    function fetchAvgRating(imageId){
+        fetch(`http://localhost:5256/ratings/${imageId}`)
+        .then(response=> response.json())
+        .then(data => {
+            const avgRating = data.average_rating;
+            const ratingDiv = document.createElement('div');
+            ratingDiv.className = "rating-info";
+            ratingDiv.innerHTML = `Overall Rating: ${avgRating || "N/A"}`;
+
+            //Append the rating info into the infoDiv
+            infoDiv.appendChild(ratingDiv);
+        })
+        .catch(error => console.error("Error fetching rating: ", error));
+    }
 });

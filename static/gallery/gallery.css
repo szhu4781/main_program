@@ -5,9 +5,13 @@ body{
     margin: 0;
     padding: 0;
     background-color: rgb(54, 54, 54);
-    overflow-x: hidden;
+    overflow: auto;
     font-family: Merriweather;
     color: rgb(236, 236, 236);
+}
+
+body::-webkit-scrollbar{
+    display: none;
 }
 
 header{
@@ -194,13 +198,22 @@ nav>ul>li>a{
     overflow: auto;
 }
 
+.modal::-webkit-scrollbar{
+    display: none;
+}
+
+body.no-scroll{
+    overflow: hidden;
+}
+
 .modal-content{
-    max-height: 90vh;
-    max-width: 90vw;
+    max-height: 90%;
+    max-width: 90%;
+    width: auto;
+    height: 85%;
     border: 2px solid white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    overflow: hidden;
 }
 
 .close {
@@ -224,16 +237,20 @@ nav>ul>li>a{
     font-size: 20px;
     font-family: Merriweather;
     cursor: pointer;
-    margin-top: 20px;
-    padding: 10px 20px;
+    margin-top: 15px;
+    padding: 10px;
     align-items: center;
 }
 
 .image-info{
     display: none;
-    padding: 0 7px;
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     max-width: 80%;
     text-align: center;
+    transform: translateY(25%);
+    position: absolute;
+    top: 100%;
+    padding: 20px;
+    margin: -75px 0 0 0;
 }

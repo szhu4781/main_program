@@ -1,15 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, flash, jsonify
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from flask_cors import CORS
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = 'c30cbe0237eb99a421b130d09ea75990'
+app.secret_key = ''
 
 # Configuring upload folder and allowed file formats
 UPLOAD_FOLDER = os.path.join(app.static_folder, 'images')
 SUFFIX = {'png', 'jpg', 'jpeg', 'svg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Enable CORS to allow cross-origin requests
+CORS(app)
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -57,29 +61,38 @@ def get_images(image_name):
 def upload():
     if request.method == 'POST':
         if 'files' not in request.files:
-            flash('No files found in request')
+            flash('No files found in request', 'error')
             return redirect(request.url)
 
         files = request.files.getlist('files')  # Get multiple files
 
+        # Check if any files are selected
         if not files or all(file.filename == '' for file in files):
-            flash('No files selected')
-            return redirect(request.url)
+            return jsonify({"status": "error", "message": "No files selected."}), 400
 
+        # Containers to store uploaded and invalid file types
         uploaded_files = []
+        invalid_files = []
 
         for file in files:  
+            # Check if the file format is correct
+            # if it's correct, then image is uploaded and stored in a folder
             if file and file_format(file.filename):
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
                 uploaded_files.append(filename)
+
+            #Otherwise its invalid and does not get uploaded    
+            else:
+                invalid_files.append(file.filename)
         
+        # Success and error messages with upload
+        if invalid_files:
+            return jsonify({"status": "error", "message": f"Invalid file type: {', '.join(invalid_files)}"}), 400
+
         if uploaded_files:
-            flash(f'Successfully uploaded: {", ".join(uploaded_files)}')
-            return redirect(url_for('gallery'))
-        else:
-            flash('No valid files. Try again.')
+            return jsonify({"status": "success", "message": f"Successfully uploaded: {', '.join(uploaded_files)}"}), 200
         
     return render_template('upload.html')
 
