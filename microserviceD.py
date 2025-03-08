@@ -1,20 +1,21 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template, redirect, url_for, session
 import os
 from datetime import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['IMAGE_FOLDER'] = os.path.join(os.getcwd(), "static", "images")
+app.secret_key = '8f43eb894054e57ce4a8909debd19d68'
 
 # Check if the image folder exists
 os.makedirs(app.config['IMAGE_FOLDER'], exist_ok=True)
 
+# Enable CORS to allow cross-origin requests
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 # Download count tracker
 download_count = {}
 max_download = 10
-
-# Creditentials for admin
-admin_username = "admin"
-admin_password = "adminonly"
 
 # Store mode preference
 user_modes = {}
@@ -58,21 +59,14 @@ def download_img(image_name):
 # Deleting images route
 @app.route('/delete/<image_name>', methods=['DELETE'])
 def delete_img(image_name):
-    username = request.args.get('username')
-    password = request.args.get('password')
-
     # Get the list of images from the images folder
     image_folder = os.path.join(app.static_folder, 'images')
     image_path = os.path.join(image_folder, image_name)
 
-    # Check the user is an admin
-    if username != admin_username or password != admin_password:
-        return jsonify({"error": "Permission denied"}), 400
-    
     # Check if image exists
     if not os.path.exists(image_path):
         return jsonify({"error": "Image not found"}), 404
-    
+
     try: 
         # Delete the image
         os.remove(image_path)
@@ -102,4 +96,4 @@ def mode():
         return jsonify({"mode": mode}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
