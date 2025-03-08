@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery | Lenscape</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='gallery/gallery.css') }}">
+</head>
+<body>
+    <header id="header">
+        <h1 style="color: inherit; text-decoration: none; -webkit-text-stroke: 2px;
+    -webkit-text-stroke-color: black;">Lenscape</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/gallery">Go Back</a></li>
+          </ul>
+    </nav>
+    <p style="font-size: 36px; text-align: center; margin-bottom: 50px;">Admin View</p>
+    <div class="image_display" style="margin-top: 0vh;">
+        <div class="slider">
+            <button class="left">❮</button>
+            <div class="container">
+                <img id="prev_img" src="{{ url_for('static', filename='images/' + prev_img) }}" class="prev_img" alt="Previous Image">
+                <img id="current_img" src="{{ url_for('static', filename='images/' + current_img) }}" class="current_img" alt="Current Image">
+                <img id="next_img" src="{{ url_for('static', filename='images/' + next_img) }}" class="next_img" alt="Next Image">
+            </div>
+            <button class="right">❯</button>
+        </div>
+
+        <button type="button" onclick="deleteImage('{{ current_img }}')" class="delete-btn">Delete Current Image</button>
+    </div>
+    <br><br><br>
+    <div class="instructions">
+        <p>
+            This page is mainly for testing and debugging purposes. <br><br>
+            Similar to the gallery page, everything is the same, <br>
+            except in admin view, you can delete images. <br><br>
+            To delete an image, press the Delete Current Image button positioned<br>
+            on the bottom of the current image. <br><br>
+            This will delete the current image that's being displayed in front<br>
+            of you. Note: Once an image is deleted, it will not be recovered. <br><br>
+            To navigate out of admin view, simple click on Go Back labeled on the nav bar.
+        </p>
+    </div>
+
+    <!--Full-Sized Image Modal-->
+    <div id="modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="full-size-image">
+        <div class="modal-buttons">
+            <button class="display-info">Image Info</button>
+            <button class="add-rating">Rate It</button>
+            
+        </div>
+        <div id="image-info" class="image-info"></div>
+        <div id="rating-form" class="rating-form">
+            <label for="rating-input">Rating (1-5): </label>
+            <input type="number" id="rating-input" min="1" max="5" step="0.1">
+            <button id="submit-rating" class="submit-rating">Submit</button>
+        </div>
+    </div>
+
+    <!--Script for image display-->
+    <script>
+        const images = [
+            {% for image in images %}
+                "{{ url_for('static', filename='images/' + image)}}",
+            {% endfor %}
+        ];
+
+        const imgDates = {{ image_dates|tojson }};
+    </script>
+
+    <!--Script for js-->
+    <script src="{{ url_for('static', filename='gallery/gallery.js') }}"></script>
+</body>
+</html>
