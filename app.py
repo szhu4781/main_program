@@ -5,7 +5,7 @@ from datetime import datetime
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = 'secret_key'
+app.secret_key = 'c30cbe0237eb99a421b130d09ea75990'
 
 # Configuring upload folder and allowed file formats
 UPLOAD_FOLDER = os.path.join(app.static_folder, 'images')
@@ -95,6 +95,32 @@ def upload():
             return jsonify({"status": "success", "message": f"Successfully uploaded: {', '.join(uploaded_files)}"}), 200
         
     return render_template('upload.html')
+
+# Admin View Route
+@app.route('/admin')
+def admin_view():
+    # Get the list of images from the images folder
+    image_folder = os.path.join(app.static_folder, 'images')
+    image_files = sorted([f for f in os.listdir(image_folder) if f.endswith(('.jpg', '.jpeg', '.png', '.svg'))])
+    
+    if not image_files:
+        return render_template('gallery.html', images=[], prev_img=None, current_img=None, next_img=None)
+
+    # Set initial images to display
+    current_img = image_files[0]
+    prev_img = image_files[-1]  # Last image is the previous image for the first slide
+    next_img = image_files[1] if len(image_files) > 1 else current_img
+
+    # Get the upload date for each image
+    image_date = {}
+    for image in image_files:
+        image_path =  os.path.join(image_folder, image)
+        timestamp = os.path.getctime(image_path)
+        date_format = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        image_date[image] = date_format
+
+    # Render the admin page with delete buttons
+    return render_template('admin.html', images=image_files, prev_img=prev_img, current_img=current_img, next_img=next_img, image_dates=image_date)
 
 if __name__ == '__main__':
     app.run(debug=True)
