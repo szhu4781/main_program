@@ -360,10 +360,19 @@ document.addEventListener("DOMContentLoaded", function (){
             return response.json();
         })
         .then(data => {
-            let tags = data.tags || "No tags";
+            let tags;
+
+            //Format it so there's a space after commas
+            if(data.tags.length > 0){
+                tags = data.tags.join(", ");
+            } else {
+                "No tags";
+            }
+
+            //Create a new div to store the tags
             const tagDiv = document.createElement('div');
             tagDiv.className = "tag-info";
-            tagDiv.innerHTML = `<p>Tags: ${tags}</p>`;
+            tagDiv.innerHTML = `<p>Tags: ${tags} </p>`;
 
             // Append tag info to the image info div
             infoDiv.appendChild(tagDiv);
