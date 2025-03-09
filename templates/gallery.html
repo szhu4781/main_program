@@ -8,16 +8,24 @@
 </head>
 <body>
     <header id="header">
-        <h1><a href="/" style="color: inherit; cursor: pointer; text-decoration: none; -webkit-text-stroke: 2px;
-    -webkit-text-stroke-color: black;">Lenscape</a></h1>
+        <h1><a href="/" style="cursor: pointer;">Lenscape</a></h1>
 
-        <button type="button" onclick="window.location.href='/upload'" class="cancel-btn">Upload</button>
+        <div class="header-btn">
+            <button type="button" onclick="window.location.href='/upload'" class="cancel-btn">Upload</button>
+        </div>
     </header>
 
     <nav>
         <ul>
             <li><a href="/gallery">Home</a></li>
             <li><a href="/upload">Upload</a></li>
+            <li><a href="/admin">Admin</a></li>
+            <div class="toggle-container">
+                <button id="mode-toggle" class="mode-btn">
+                    <span class="mode-slider"></span>
+                </button>
+                <span class="mode-label">Light</span>
+            </div>    
           </ul>
     </nav>
 
@@ -36,18 +44,22 @@
     <div class="instructions">
         <p>
             Click on the arrows on the sides of the image slider 
-            to view the previous or next image. <br><br><br>
+            to view the previous or next image. <br><br>
 
             To view an image at full size, simply click on the current
             image being displayed and it will display the full-sized 
-            image along with its attributes.<br><br><br>
+            image along with unique buttons.<br><br>
 
             The image attributes will be displayed 
             when you click on the Image Info button located
-            at the bottom of the full-size image. <br><br><br>
+            at the bottom of the full-size image. <br><br>
+
+            Clicking on the Rate button will display a rating
+            form prompting for a rating from 1 to 5. Click on
+            the button again to hide the form. <br><br>
             
-            To close out of full-size view, simply click on the X located
-            at the top-right in full-size view, or click anywhere on your
+            To close out of full-size view, click the X
+            at the top-right in the modal, or click anywhere on your
             screen aside from the image.
         </p>
     </div>
@@ -56,8 +68,29 @@
     <div id="modal" class="modal">
         <span class="close">&times;</span>
         <img class="modal-content" id="full-size-image">
-        <button class="display-info">Image Info</button>
+        <div class="modal-buttons">
+            <button class="display-info">Image Info</button>
+            <button class="add-rating">Rate It</button>
+            <button class="download">
+                <img src="../static/test/pngtree-file-download-icon-image_1344466.jpg">
+            </button>
+            <button class="categorize">
+                <img src="../static/test/category-9.png">
+            </button>
+            <button class="tag-image">+</button>
+        </div>
         <div id="image-info" class="image-info"></div>
+        <div id="rating-form" class="rating-form">
+            <label for="rating-input">Rating (1-5): </label>
+            <input type="number" id="rating-input" min="1" max="5" step="0.1">
+            <button id="submit-rating" class="submit-rating">Submit</button>
+        </div>
+        <div id="category-dropdown" class="category-dropdown">
+            <select id="selection">
+                <option value="">Select a category</option>
+            </select>
+            <button id="confirm-selection">Confirm</button>
+        </div>
     </div>
 
     <!--Script for image display-->
