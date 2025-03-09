@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['IMAGE_FOLDER'] = os.path.join(os.getcwd(), "static", "images")
-app.secret_key = '8f43eb894054e57ce4a8909debd19d68'
+app.secret_key = 'secret_key'
 
 # Check if the image folder exists
 os.makedirs(app.config['IMAGE_FOLDER'], exist_ok=True)
