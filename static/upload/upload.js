@@ -85,4 +85,55 @@ document.addEventListener('DOMContentLoaded', function () {
             fileName.style.display = 'none';
         }
     }
+
+    //Fetch the microservice host
+    const toggleButton = document.getElementById('mode-toggle');
+    fetch("http://localhost:5001/mode")
+        .then(response => response.json())
+        .then(data => {
+            const userMode = data.mode;
+            applyTheme(userMode);
+        })
+        .catch(error => console.error('error fetching theme:', error));
+    
+    //Button for toggling theme
+    toggleButton.addEventListener("click", function(){
+    let current_theme;
+
+        //If the body has class dark-mode, switch to light mode
+        if(document.body.classList.contains("dark-mode")){
+            current_theme = "light";
+        } else {
+            current_theme = "dark";
+        }
+
+        applyTheme(current_theme);
+
+        //Save preference to microservice
+        fetch("http://localhost:5001/mode", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode: current_theme }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error("error setting theme", error));
+    });
 });
+
+const modeLabel = document.querySelector('.mode-label');
+
+//Function for applying web app theme
+function applyTheme(mode){
+    //Check if theme is dark or light, remove and replace
+    //the corresponding one
+    if(mode === "dark"){
+        document.body.classList.add("dark-mode");
+        document.body.classList.remove("light-mode");
+        modeLabel.textContent = "Dark";
+    } else {
+        document.body.classList.add("light-mode");
+        document.body.classList.remove("dark-mode");
+        modeLabel.textContent = "Light";
+    }
+}

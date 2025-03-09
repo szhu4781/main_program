@@ -47,8 +47,6 @@ header::after{
 header>h1{
     padding: 1% 0 0 70%;
     font-size: 48px;
-    -webkit-text-stroke: 2px;
-    -webkit-text-stroke-color: black;
 }
 
 nav{
@@ -157,4 +155,102 @@ input[type="submit"]{
     font-family: Montserrat Alternates;
     font-weight: bold;
     cursor: pointer;
+}
+
+/*Light Mode-----------------------------------*/
+.light-mode{
+    background-color: rgb(236, 236, 236);
+    color: black;
+}
+
+.light-mode nav{
+    background-color: rgb(176, 176, 176);
+}
+
+.light-mode nav>ul>li>a{
+    color: black;
+}
+
+.light-mode header>h1>a{
+    color: rgb(255, 255, 255);
+    -webkit-text-stroke: 2px;
+    -webkit-text-stroke-color: rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+/*Dark Mode-----------------------------------*/
+.dark-mode{
+    background-color: rgb(29, 29, 29);
+    color: white;
+}
+
+.dark-mode nav{
+    background-color: rgb(55, 55, 55);
+}
+
+.dark-mode nav>ul>li>a{
+    color: rgb(255, 255, 255);
+}
+
+.dark-mode header>h1>a{
+    color: black;
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke-color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+/*Light/Dark Mode Button Toggling*/
+.toggle-container {
+    display: flex;
+    margin-top: 50px;
+    align-items: center;
+    gap: 10px;
+}
+
+.mode-btn{
+    position: relative;
+    width: 61px;
+    height: 31px;
+    padding: 0;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.mode-btn .mode-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px; 
+    height: 24px;
+    background-color: white;
+    border-radius: 50%; 
+    transition: transform 0.3s ease;
+}
+
+.dark-mode .mode-btn .mode-slider {
+    transform: translateX(30px);
+}
+
+.dark-mode .mode-label {
+    content: "Dark";
+}
+
+.dark-mode .mode-btn {
+    background-color: #304371;
+    border: 1px solid rgb(255, 255, 255, 0.7);
+} 
+
+.light-mode .mode-btn .mode-slider {
+    transform: translateX(0);
+}
+
+.light-mode .mode-label {
+    content: "Light";
+}
+
+.light-mode .mode-btn {
+    background-color: #ffca59;
+    border: 1px solid rgb(35, 35, 35, 0.4);
 }
