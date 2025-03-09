@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function (){
     const modalImg = document.getElementById("full-size-image");
     const close = document.querySelector(".close")
     const infoButton = document.querySelector(".display-info");
+    const rateButton = document.querySelector(".add-rating");
     const infoDiv = document.getElementById("image-info");
 
     //Variables for slider animation
@@ -68,6 +69,8 @@ document.addEventListener("DOMContentLoaded", function (){
             current.src = images[i];
             next.src = images[(i + 1) % images.length];
 
+            document.getElementById("current_img").src = images[i];
+
             //Reset the position after transition
             prev.style.transition = "none";
             current.style.transition = "none";
@@ -106,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function (){
 
         //Hide info if it's already displayed and
         //user clicks on the button
-        if(infoDiv.style.display === "block"){
+        if(infoDiv.style.display === "block" || ratingForm.style.display === "block"){
             infoDiv.style.display = "none";
             modal.style.maxHeight = "100%";
         }
@@ -157,12 +160,25 @@ document.addEventListener("DOMContentLoaded", function (){
     //Microservice A Integration: Image Rating System designed by Joseph Messer
     //------------------------------------------------------------------------------------//
 
+    const ratingForm = document.getElementById("rating-form");
+    const ratingInput = document.getElementById("rating-input")
+    const submitRating = document.getElementById("submit-rating");
+
     //Function for fetching average ratings for each image
     function fetchAvgRating(imageId){
         fetch(`http://localhost:5256/ratings/${imageId}`)
-        .then(response=> response.json())
+        .then(response => response.json())
         .then(data => {
-            const avgRating = data.average_rating;
+            let avgRating = data.average_rating;
+
+            //Round the average rating to the nearest decimal
+            //Check if the rating exists or not
+            if(avgRating){
+                avgRating = avgRating.toFixed(1);
+            } else {
+                avgRating = "N/A";
+            }
+            
             const ratingDiv = document.createElement('div');
             ratingDiv.className = "rating-info";
             ratingDiv.innerHTML = `Overall Rating: ${avgRating || "N/A"}`;
@@ -172,4 +188,139 @@ document.addEventListener("DOMContentLoaded", function (){
         })
         .catch(error => console.error("Error fetching rating: ", error));
     }
+
+    //Display rating form when the user clicks Rate It button
+    rateButton.addEventListener("click", function(){
+        if(ratingForm.style.display === "block" || infoDiv.style.display === "block"){
+            ratingForm.style.display = "none";
+        } else {
+            ratingForm.style.display = "block";
+        } 
+    });
+
+    //Submit rating button
+    submitRating.addEventListener("click", function(){
+        const rateValue = parseFloat(ratingInput.value);
+        const imageId = modalImg.src.split('/').pop();
+
+        //Check if the rating is a valid value before submitting
+        if(isNaN(rateValue) || rateValue < 1 || rateValue > 5){
+            alert("Please enter a value between 1 and 5.");
+            return;
+        }
+
+        //Fetch the microservice host
+        fetch(`http://localhost:5256/ratings`, {
+            method: "POST",
+            headers: {"Content-Type": " application/json"},
+            body: JSON.stringify({ user_id: "123", product_id: imageId, rating: rateValue})
+        })
+        .then(response => response.json())
+        .then(data => {
+            //Refresh rating after submitting
+            console.log("Rating submitted: ", data);
+            fetchAvgRating(imageId);
+            ratingForm.style.display = "none";
+            ratingInput.value = "";
+        })
+        .catch(error => console.error("Error submitting rating: ", error));
+    });
+
+    //------------------------------------------------------------------------------------//    
+    //Microservice D Integration: Downloading Images and Theme Toggling
+    //------------------------------------------------------------------------------------//
+    const downloadButton = document.querySelector('.download');
+
+    downloadButton.addEventListener("click", function(){
+        const imageElement = document.getElementById("current_img");
+        const imageUrl = imageElement.src;
+        const imageName = imageUrl.split('/').pop(); //Extract file name
+        const downloadUrl = `http://localhost:5001/download/${imageName}`;
+        window.open(downloadUrl, "_blank");
+    });
+
+    //Fetch the microservice host
+    const toggleButton = document.getElementById('mode-toggle');
+    fetch("http://localhost:5001/mode")
+        .then(response => response.json())
+        .then(data => {
+            const userMode = data.mode;
+            applyTheme(userMode);
+        })
+        .catch(error => console.error('error fetching theme:', error));
+    
+    //Button for toggling theme
+    toggleButton.addEventListener("click", function(){
+        let current_theme;
+
+        //If the body has class dark-mode, switch to light mode
+        if(document.body.classList.contains("dark-mode")){
+            current_theme = "light";
+        } else {
+            current_theme = "dark";
+        }
+
+        applyTheme(current_theme);
+
+        //Save preference to microservice
+        fetch("http://localhost:5001/mode", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode: current_theme }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error("error setting theme", error));
+    });
 });
+
+//------------------------------------------------------------------------------------//    
+//Microservice D Integration: Deleting Images as Admin and Theme Toggling
+//------------------------------------------------------------------------------------//
+// Function to delete an image
+function deleteImage() {
+    const imageElement = document.getElementById("current_img");
+    const imageUrl = imageElement.src;
+    const imageName = imageUrl.split('/').pop(); //Extract file name
+
+    //Validation message
+    if (confirm(`Are you sure you want to delete ${imageName}?`)) {
+        // Send a DELETE request to the microservice
+        fetch(`http://localhost:5001/delete/${imageName}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert('Image deleted successfully!');
+                location.reload(); // Refresh page to update gallery
+            } else {
+                alert('Failed to delete the image: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('error:', error);
+            alert('An error occurred while deleting the image.');
+        });
+    }
+}
+
+const modeLabel = document.querySelector('.mode-label');
+
+//Function for applying web app theme
+function applyTheme(mode){
+    //Check if theme is dark or light, remove and replace
+    //the corresponding one
+    if(mode === "dark"){
+        document.body.classList.add("dark-mode");
+        document.body.classList.remove("light-mode");
+        modeLabel.textContent = "Dark";
+    } else {
+        document.body.classList.add("light-mode");
+        document.body.classList.remove("dark-mode");
+        modeLabel.textContent = "Light";
+    }
+}
