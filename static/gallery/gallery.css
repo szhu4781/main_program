@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+/*Main body----------------------------*/
 body{
     text-align: center;
     margin: 0;
@@ -51,25 +52,24 @@ header::after{
 header>h1{
     padding: 1% 0 0 70%;
     font-size: 48px;
-    -webkit-text-stroke: 2px;
-    -webkit-text-stroke-color: black;
 }
 
-header>button{
+.header-btn>button{
     background-color: rgb(48, 153, 205);
+    margin-left: 70vw;
     color: white;
-    margin: 30px 0 0 70vw;
-    width: 15%;
+    width: 10%;
     height: 8vh;
     border: 1px solid white;
     border-style: hidden;
     border-radius: 5px;
-    font-size: 28px;
+    font-size: 24px;
     font-family: Montserrat Alternates;
     font-weight: 500;
     cursor: pointer;
 }
 
+/*Navigation bar ---------------------------*/
 nav{
     position: relative;
     left: 0;
@@ -88,11 +88,11 @@ nav>ul>li>a{
     display: block;
     text-decoration: none;
     line-height: 100px;
-    color: white;
     margin-right: 50px;
     text-align: center;
 }
 
+/*Image Gallery----------------------*/
 .image_display{
     background-color: rgb(143, 143, 143);
     width: 85vw;
@@ -111,19 +111,12 @@ nav>ul>li>a{
 }
 
 .slider>button{
-    background-color: rgb(0, 0, 0, 0.4);
-    color: white;
     width: 10vw;
     height: 90vh;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
     font-size: 64px;
-    z-index: 10;
-}
-
-.slider>button:hover{
-    background-color: rgb(54, 54, 54, 0.7);
 }
 
 .slider-button.left{
@@ -166,7 +159,7 @@ nav>ul>li>a{
     height: 250px;
     left: 500px;
     transform: translateX(-100%) scale(0.9);
-    z-index: 1;
+    z-index: 5;
     opacity: 0.7;
 }
 
@@ -175,14 +168,19 @@ nav>ul>li>a{
     height: 250px;
     right: 500px;
     transform: translateX(100%) scale(0.9);
-    z-index: 1;
+    z-index: 5;
     opacity: 0.7;
 }
 
+/*Instructions-------------------------*/
 .instructions{
-    font-size: 28px;
+    width: 75%;
+    font-size: 25px;
+    text-align: center;
+    margin-left: 20%;
 }
 
+/*Modal----------------------------------*/
 .modal{
     display: none;
     position: fixed;
@@ -216,6 +214,12 @@ body.no-scroll{
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
+.modal-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
 .close {
     position: absolute;
     top: 20px;
@@ -226,11 +230,10 @@ body.no-scroll{
     cursor: pointer;
 }
 
-.display-info{
+/*Microservice features---------------------*/
+.display-info, .add-rating, .download{
     background-color: rgb(48, 153, 205);
     color: white;
-    width: 10%;
-    height: 7%;
     border: 1px solid white;
     border-style: hidden;
     border-radius: 5px;
@@ -253,4 +256,169 @@ body.no-scroll{
     top: 100%;
     padding: 20px;
     margin: -75px 0 0 0;
+}
+
+#rating-form{
+    display: none;
+    margin: -25px 0 0 0;
+    position: absolute;
+    top: 100%;
+    padding: 20px;
+    transform: translateY(25%);
+}
+
+#submit-rating{
+    background-color: rgb(48, 205, 106);
+    color: white;
+    border: 1px solid white;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 20px;
+    font-family: Merriweather;
+    cursor: pointer;
+    margin: 0 0 0 15px;
+    padding: 10px;
+    align-items: center;
+}
+
+.delete-btn{
+    background-color: rgb(225, 38, 38);
+    color: white;
+    border: 1px solid white;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 20px;
+    font-family: Merriweather;
+    cursor: pointer;
+    margin: 20px;
+    padding: 10px;
+    align-items: center;
+}
+
+/*Light Mode-----------------------------------*/
+.light-mode{
+    background-color: rgb(236, 236, 236);
+    color: black;
+}
+
+.light-mode nav{
+    background-color: rgb(176, 176, 176);
+}
+
+.light-mode nav>ul>li>a{
+    color: black;
+}
+
+.light-mode .image_display{
+    background-color: rgb(176, 176, 176);
+}
+
+.light-mode .slider>button{
+    background-color: rgba(0, 0, 0, 0.4);
+    color: rgb(234, 234, 234);
+}
+
+.light-mode .slider>button:hover{
+    background-color: rgba(54, 54, 54, 0.7);
+}
+
+.light-mode header>h1>a{
+    color: rgb(255, 255, 255);
+    -webkit-text-stroke: 2px;
+    -webkit-text-stroke-color: rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+.light-mode .rating-form{
+    color: white;
+}
+
+/*Dark Mode-----------------------------------*/
+.dark-mode{
+    background-color: rgb(29, 29, 29);
+    color: white;
+}
+
+.dark-mode nav{
+    background-color: rgb(55, 55, 55);
+}
+
+.dark-mode nav>ul>li>a{
+    color: rgb(255, 255, 255);
+}
+
+.dark-mode .image_display{
+    background-color: rgb(55, 55, 55);
+}
+
+.dark-mode .slider>button{
+    background-color: rgba(255, 255, 255, 0.7);
+    color: black;
+}
+
+.dark-mode .slider>button:hover{
+    background-color: rgb(158, 158, 158, 0.7);
+}
+
+.dark-mode header>h1>a{
+    color: black;
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke-color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+/*Light/Dark Mode Button Toggling*/
+.toggle-container {
+    display: flex;
+    margin-top: 50px;
+    align-items: center;
+    gap: 10px;
+}
+
+.mode-btn{
+    position: relative;
+    width: 61px;
+    height: 31px;
+    padding: 0;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.mode-btn .mode-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px; 
+    height: 24px;
+    background-color: white;
+    border-radius: 50%; 
+    transition: transform 0.3s ease;
+}
+
+.dark-mode .mode-btn .mode-slider {
+    transform: translateX(30px);
+}
+
+.dark-mode .mode-label {
+    content: "Dark";
+}
+
+.dark-mode .mode-btn {
+    background-color: #304371;
+    border: 1px solid rgb(255, 255, 255, 0.7);
+} 
+
+.light-mode .mode-btn .mode-slider {
+    transform: translateX(0);
+}
+
+.light-mode .mode-label {
+    content: "Light";
+}
+
+.light-mode .mode-btn {
+    background-color: #ffca59;
+    border: 1px solid rgb(35, 35, 35, 0.4);
 }
