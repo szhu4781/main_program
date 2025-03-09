@@ -2,10 +2,17 @@ document.addEventListener("DOMContentLoaded", function (){
     //Variables for full-size image display
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("full-size-image");
-    const close = document.querySelector(".close")
+    const close = document.querySelector(".close");
+
     const infoButton = document.querySelector(".display-info");
     const rateButton = document.querySelector(".add-rating");
     const infoDiv = document.getElementById("image-info");
+
+    const categorizeButton = document.querySelector('.categorize');
+    const dropdown = document.getElementById('category-dropdown');
+    const categorySelect = document.getElementById('selection');
+    const categoryConfirm = document.getElementById('confirm-selection');
+    const tagButton = document.querySelector('.tag-image');
 
     //Variables for slider animation
     let i = 0;
@@ -106,10 +113,14 @@ document.addEventListener("DOMContentLoaded", function (){
         //its average rating
         const imageId = modalImg.src.split('/').pop();
         fetchAvgRating(imageId);
+        fetchCategory(imageId);
+        fetchTags(imageId);
 
         //Hide info if it's already displayed and
         //user clicks on the button
-        if(infoDiv.style.display === "block" || ratingForm.style.display === "block"){
+        if(infoDiv.style.display === "block" || 
+            ratingForm.style.display === "block" || 
+            dropdown.style.display === "block"){
             infoDiv.style.display = "none";
             modal.style.maxHeight = "100%";
         }
@@ -191,7 +202,9 @@ document.addEventListener("DOMContentLoaded", function (){
 
     //Display rating form when the user clicks Rate It button
     rateButton.addEventListener("click", function(){
-        if(ratingForm.style.display === "block" || infoDiv.style.display === "block"){
+        if(ratingForm.style.display === "block" || 
+            infoDiv.style.display === "block" ||
+            dropdown.style.display === "block"){
             ratingForm.style.display = "none";
         } else {
             ratingForm.style.display = "block";
@@ -224,6 +237,157 @@ document.addEventListener("DOMContentLoaded", function (){
             ratingInput.value = "";
         })
         .catch(error => console.error("Error submitting rating: ", error));
+    });
+     //------------------------------------------------------------------------------------//    
+    //Microservice B Integration: Categorize and Tag Images
+    //------------------------------------------------------------------------------------//
+    // Fetch categories from microservice
+    let categories = [];
+    fetch("http://localhost:7777/categories")
+        .then(response => response.json())
+        .then(data => {
+            categories = data.categories;
+            console.log("Categories fetched:", categories);
+
+            // Populate the dropdown with categories
+            categories.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error fetching categories:", error));
+
+    // Event listener for categorizing an image
+    categorizeButton.addEventListener("click", function (){
+        if(dropdown.style.display === "block" || 
+            ratingForm.style.display === "block" || 
+            infoDiv.style.display === "block"){
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = "block";
+            }
+    });
+
+    //Handle selection
+    if(categoryConfirm){
+        categoryConfirm.addEventListener("click", function(){
+            const selectedCategory = categorySelect.value;
+            const imageName = modalImg.src.split('/').pop(); // Get the current image name
+
+            if (selectedCategory) {
+                categorizeImage(imageName, selectedCategory);
+                dropdown.style.display = "none"; // Hide the dropdown after selection
+            } else {
+                alert("Please select a category.");
+            }
+        });
+    } else {
+        console.error("button not found");
+    }
+
+    // Function to categorize an image
+    function categorizeImage(imageName, category) {
+        fetch("http://localhost:7777/categorize", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image_name: imageName, category: category }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(`Image categorized successfully: ${imageName} -> ${category}`);
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => console.error("Error categorizing image:", error));
+    }
+
+    // Function to fetch the category of the current image
+    function fetchCategory(imageId) {
+        fetch(`http://localhost:7777/categories/${imageId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("network error");
+            }
+            return response.json();
+        })
+        .then(data => {
+            let category = data.category || "Uncategorized"; 
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = "category-info";
+            categoryDiv.innerHTML = `<p>Category: ${category}</p>`;
+
+            // Append category info to the image info div
+            infoDiv.appendChild(categoryDiv);
+        })
+        .catch(error => {
+            console.error("Error fetching category: ", error);
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = "category-info";
+            categoryDiv.innerHTML = `<p>Category: Uncategorized</p>`;
+            infoDiv.appendChild(categoryDiv);
+        });
+    }    
+
+    // Function to tag an image
+    function tagImage(imageName, tags) {
+        fetch("http://localhost:7777/tags", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image_name: imageName, tags: tags }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(`Tags updated successfully: ${imageName} -> ${tags.join(", ")}`);
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => console.error("Error tagging image:", error));
+    }
+
+    //Function to fetch the tags of the current image
+    function fetchTags(imageId){
+        fetch(`http://localhost:7777/tags/${imageId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("network error");
+            }
+            return response.json();
+        })
+        .then(data => {
+            let tags = data.tags || "No tags";
+            const tagDiv = document.createElement('div');
+            tagDiv.className = "tag-info";
+            tagDiv.innerHTML = `<p>Tags: ${tags}</p>`;
+
+            // Append tag info to the image info div
+            infoDiv.appendChild(tagDiv);
+        })
+        .catch(error => {
+            console.error("error fetching tag: ", error);
+            const tagDiv = document.createElement('div');
+            tagDiv.className = "tag-info";
+            tagDiv.innerHTML = `<p>Tags: No tags</p>`;
+            infoDiv.appendChild(tagDiv);
+        });
+    }
+
+    // Event listener for tagging an image
+    tagButton.addEventListener("click", function () {
+        const imageName = modalImg.src.split('/').pop(); // Get the current image name
+        const tags = prompt("Enter tags for this image (comma-separated):"); // Prompt user for tags
+
+        if (tags) {
+            const tagList = tags.split(',').map(tag => tag.trim()); // Split tags into an array
+            tagImage(imageName, tagList);
+        } else {
+            alert("Please enter at least one tag.");
+        }
     });
 
     //------------------------------------------------------------------------------------//    
