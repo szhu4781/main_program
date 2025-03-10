@@ -509,7 +509,13 @@ document.addEventListener("DOMContentLoaded", function (){
                 // Hide all images
                 document.querySelectorAll(".container img").forEach(img => {
                     img.style.display = "none";
-                    img.classList.remove("current_img", "prev_img", "next_img");
+                    document.querySelectorAll(".current_img").forEach(img =>{
+                        img.addEventListener("click", function () {
+                            modal.style.display = "flex";
+                            document.body.classList.add("no-scroll");
+                            modalImg.src = img.src;
+                        }); 
+                    })
                 });
 
                 // Show only matching images
@@ -523,8 +529,6 @@ document.addEventListener("DOMContentLoaded", function (){
                             // First matching image becomes current_img
                             if (index === 0) {
                                 imgElement.classList.add("current_img");
-                            } else {
-                                imgElement.classList.add("next_img");
                             }
                         }
                     });
@@ -549,7 +553,7 @@ document.addEventListener("DOMContentLoaded", function (){
         // Show all images again
         allImages.forEach(img => {
             img.style.display = "block";
-            img.classList.remove("current_img", "prev_img", "next_img"); // Remove existing classes
+            img.classList.remove("prev_img", "current_img", "next_img"); // Remove existing classes
         });
     
         // Reset slider format 
