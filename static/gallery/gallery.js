@@ -1,18 +1,41 @@
 document.addEventListener("DOMContentLoaded", function (){
-    //Variables for full-size image display
+    //Variables for full-size image display--------------------------
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("full-size-image");
     const close = document.querySelector(".close");
-
-    const infoButton = document.querySelector(".display-info");
+    const infoButton = document.querySelector(".display-info");  
+    const infoDiv = document.getElementById("image-info");  
+    //---------------------------------------------------------------
+    //Variables for displaying image context-------------------------------------
+    const editContext = document.querySelector(".edit-context");   
+    const contextForm = document.getElementById("context-form");
+    const saveContext = document.getElementById("save-context");
+    //---------------------------------------------------------------
+    //Variables for rating system-------------------------------
     const rateButton = document.querySelector(".add-rating");
-    const infoDiv = document.getElementById("image-info");
-
+    const ratingForm = document.getElementById("rating-form");
+    const ratingInput = document.getElementById("rating-input")
+    const submitRating = document.getElementById("submit-rating");
+    //---------------------------------------------------------------
+    //Variables for categorizing and tagging images------------------------------
     const categorizeButton = document.querySelector('.categorize');
     const dropdown = document.getElementById('category-dropdown');
     const categorySelect = document.getElementById('selection');
     const categoryConfirm = document.getElementById('confirm-selection');
     const tagButton = document.querySelector('.tag-image');
+    //---------------------------------------------------------------
+    //Variables for searching images---------------------------------
+    const searchButton = document.getElementById("search-button");
+    const searchMsg = document.getElementById("search-message");
+    const clearSearch = document.getElementById("clear-search");
+    //----------------------------------------------------------------------
+    //Variables for downloading images--------------------------------------
+    const downloadButton = document.querySelector('.download');
+    //---------------------------------------------------------------
+    //Variables for toggling theme----------------------------------------
+    const toggleButton = document.getElementById('mode-toggle');
+    //---------------------------------------------------------------
+    //---------------------------------------------------------------
 
     //Variables for slider animation
     let i = 0;
@@ -110,15 +133,17 @@ document.addEventListener("DOMContentLoaded", function (){
     //Toggle image info
     infoButton.addEventListener("click", function (){
         //Get the filename of current image and fetch
-        //its average rating
+        //the context, average rating, category, and tags
         const imageId = modalImg.src.split('/').pop();
+        fetchContext(imageId);
         fetchAvgRating(imageId);
         fetchCategory(imageId);
         fetchTags(imageId);
 
-        //Hide info if it's already displayed and
+        //Hide info if it's already displayed and if
         //user clicks on the button
         if(infoDiv.style.display === "block" || 
+            contextForm.style.display === "block" ||
             ratingForm.style.display === "block" || 
             dropdown.style.display === "block"){
             infoDiv.style.display = "none";
@@ -170,11 +195,6 @@ document.addEventListener("DOMContentLoaded", function (){
     //------------------------------------------------------------------------------------//    
     //Microservice A Integration: Image Rating System designed by Joseph Messer
     //------------------------------------------------------------------------------------//
-
-    const ratingForm = document.getElementById("rating-form");
-    const ratingInput = document.getElementById("rating-input")
-    const submitRating = document.getElementById("submit-rating");
-
     //Function for fetching average ratings for each image
     function fetchAvgRating(imageId){
         fetch(`http://localhost:5256/ratings/${imageId}`)
@@ -204,6 +224,7 @@ document.addEventListener("DOMContentLoaded", function (){
     rateButton.addEventListener("click", function(){
         if(ratingForm.style.display === "block" || 
             infoDiv.style.display === "block" ||
+            contextForm.style.display === "block" ||
             dropdown.style.display === "block"){
             ratingForm.style.display = "none";
         } else {
@@ -324,6 +345,7 @@ document.addEventListener("DOMContentLoaded", function (){
             infoDiv.appendChild(categoryDiv);
         })
         .catch(error => {
+            //If there's an error, set a default placeholder
             console.error("Error fetching category: ", error);
             const categoryDiv = document.createElement('div');
             categoryDiv.className = "category-info";
@@ -378,6 +400,7 @@ document.addEventListener("DOMContentLoaded", function (){
             infoDiv.appendChild(tagDiv);
         })
         .catch(error => {
+            //If there's an error, set a default placeholder
             console.error("error fetching tag: ", error);
             const tagDiv = document.createElement('div');
             tagDiv.className = "tag-info";
@@ -387,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function (){
     }
 
     // Event listener for tagging an image
-    tagButton.addEventListener("click", function () {
+    tagButton.addEventListener("click", function(){
         const imageName = modalImg.src.split('/').pop(); // Get the current image name
         const tags = prompt("Enter tags for this image (comma-separated):"); // Prompt user for tags
 
@@ -399,11 +422,153 @@ document.addEventListener("DOMContentLoaded", function (){
         }
     });
 
+    //-------------------------------------------------------------------------------------//
+    //Microservice C Integration: Adding Image Context and Searching Images
+    //-------------------------------------------------------------------------------------//
+    //Event listener for updating image context
+    saveContext.addEventListener("click", function(){
+        const imageId = modalImg.src.split('/').pop();
+        const newName = document.getElementById("name-input").value;
+        const newDescription = document.getElementById("description-input").value;
+    
+        fetch("http://localhost:4444/context", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image_name: imageId, name: newName, description: newDescription }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(`Image info updated: ${newName} - ${newDescription}`);
+            document.getElementById("context-form").style.display = "none";
+            fetchContext(imageId);  // Refresh the context display
+        })
+        .catch(error => console.error("Error updating context:", error));
+    });
+    
+    //Function to fetch context of specific image
+    function fetchContext(imageId){
+        fetch(`http://localhost:4444/context/${imageId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("network error");
+            }
+            return response.json();
+        })
+        .then(data => {
+            let imageName = data.name || "N/A";
+            let description = data.description || "No description available";
+
+            //Create a new div to store the context
+            const contextDiv = document.createElement('div');
+            contextDiv.className = "context-info";
+            contextDiv.innerHTML = `<p>Name: ${imageName}</p>
+                                    <p>Description: ${description}</p>`;
+
+            // Append context info to the image info div
+            infoDiv.appendChild(contextDiv);
+        })
+        .catch(error => {
+            console.error("error fetching tag: ", error);
+            const contextDiv = document.createElement('div');
+            contextDiv.className = "context-info";
+            contextDiv.innerHTML = `<p>Name: N/A</p>
+                                    <p>Description: No description available</p>`;
+            infoDiv.appendChild(contextDiv);
+        });
+    }
+
+    //Event listener for adding context to image
+    editContext.addEventListener("click", function(){
+        if(infoDiv.style.display === "block" || 
+            contextForm.style.display === "block" ||
+            ratingForm.style.display === "block" || 
+            dropdown.style.display === "block"){
+            contextForm.style.display = "none";
+        }
+        else {
+            contextForm.style.display = "block";
+        }
+    });
+
+    //Event listener for searching images
+    searchButton.addEventListener("click", function(){
+        const searchQuery = document.getElementById("search-input").value.trim();
+
+        //Check if the user has inputted something into the searchbar
+        if (!searchQuery) {
+            alert("Please enter a search query.");
+            return;
+        }
+
+        //Fetch the search through the microservice
+        fetch(`http://localhost:4444/search?query=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+            //Display matching images corresponding to search result
+            if (data.matching_images) {
+                // Hide all images
+                document.querySelectorAll(".container img").forEach(img => {
+                    img.style.display = "none";
+                    img.classList.remove("current_img", "prev_img", "next_img");
+                });
+
+                // Show only matching images
+                if (data.matching_images.length > 0) {
+                    // Show only matching images and reset their class
+                    data.matching_images.forEach((imageName, index) => {
+                        const imgElement = document.querySelector(`img[src$="${imageName}"]`);
+                        if (imgElement) {
+                            imgElement.style.display = "block";
+                            
+                            // First matching image becomes current_img
+                            if (index === 0) {
+                                imgElement.classList.add("current_img");
+                            } else {
+                                imgElement.classList.add("next_img");
+                            }
+                        }
+                    });
+                }
+                //Display a message explaining search results on bottom of searchbar
+                searchMsg.textContent = `Found ${data.matching_images.length} matching images`;
+            } else {
+                searchMsg.textContent = "No matching images found.";
+            }
+        })
+        .catch(error => console.error("Error searching images:", error));
+    });
+
+    //Event listener for clearing search results
+    clearSearch.addEventListener("click", function(){
+        // Clear search input
+        document.getElementById("search-input").value = "";
+    
+        // Get all images
+        const allImages = document.querySelectorAll(".container img");
+    
+        // Show all images again
+        allImages.forEach(img => {
+            img.style.display = "block";
+            img.classList.remove("current_img", "prev_img", "next_img"); // Remove existing classes
+        });
+    
+        // Reset slider format 
+        if (allImages.length > 0) {
+            allImages[0].classList.add("prev_img");
+            if (allImages.length > 1) {
+                allImages[1].classList.add("current_img");
+            }
+            if (allImages.length > 2) {
+                allImages[allImages.length - 1].classList.add("next_img");
+            }
+        }
+        // Reset search message
+        searchMsg.textContent = "";
+    });    
+
     //------------------------------------------------------------------------------------//    
     //Microservice D Integration: Downloading Images and Theme Toggling
     //------------------------------------------------------------------------------------//
-    const downloadButton = document.querySelector('.download');
-
     downloadButton.addEventListener("click", function(){
         const imageElement = document.getElementById("current_img");
         const imageUrl = imageElement.src;
@@ -413,7 +578,6 @@ document.addEventListener("DOMContentLoaded", function (){
     });
 
     //Fetch the microservice host
-    const toggleButton = document.getElementById('mode-toggle');
     fetch("http://localhost:5001/mode")
         .then(response => response.json())
         .then(data => {

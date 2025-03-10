@@ -54,9 +54,61 @@ header>h1{
     font-size: 48px;
 }
 
+/*Search bar*/
+.search-div{
+    position: absolute;
+    top: 70%;
+    left: 30vw;
+}
+
+#search-input{
+    width: 40vw;
+    height: 40px;
+    border-radius: 5px;
+    border-style: hidden;
+    font-size: 18px;
+    padding: 5px 10px;
+}
+
+#search-button{
+    position: absolute;
+    top: -5px;
+    background: none;
+    border-style: none;
+    cursor: pointer;
+}
+
+#search-button>img{
+    width: 60px;
+    height: 60px;
+}
+
+#search-message{
+    position: absolute;
+    top: 35px;
+    left: 12vw;
+}
+
+#clear-search{
+    position: absolute;
+    top: 55px;
+    right: 10px;
+    background: transparent;
+    color: rgb(0, 0, 0);
+    border-style: none;
+    cursor: pointer;
+}
+
+.upload-btn{
+    position: fixed;
+    top: 60%;
+}
+
 .header-btn>button{
     background-color: rgb(48, 153, 205);
-    margin-left: 70vw;
+    position: absolute;
+    margin-left: 30vw;
+    margin-bottom: 30vh;
     color: white;
     width: 10%;
     height: 8vh;
@@ -75,7 +127,7 @@ nav{
     left: 0;
     background-color: rgb(155, 155, 155);
     width: 15vw;
-    height: 200vh;
+    height: 220vh;
     font-size: 24px;
     float: left;
 }
@@ -180,6 +232,14 @@ nav>ul>li>a{
     margin-left: 20%;
 }
 
+.instructions>ul{
+    font-weight: bold;
+    list-style: none;
+    text-align: left;
+    margin-left: 5%;
+    line-height: 2;
+}
+
 /*Modal----------------------------------*/
 .modal{
     display: none;
@@ -231,34 +291,18 @@ body.no-scroll{
 }
 
 /*Microservice features---------------------*/
-.display-info, .add-rating{
-    background-color: rgb(48, 153, 205);
-    color: white;
-    border: 1px solid white;
+.display-info{
+    background: none;
     border-style: hidden;
-    border-radius: 5px;
-    font-size: 20px;
-    font-family: Merriweather;
-    cursor: pointer;
-    margin-top: 15px;
-    padding: 10px;
-    align-items: center;
-}
-
-/*Download button*/
-.download{
-    background: transparent;
-    border: 1px solid white;
-    border-style: hidden;
-    border-radius: 5px;
     cursor: pointer;
     margin-top: 15px;
     padding: 5px;
+    align-items: center;
 }
 
-.download>img{
-    width: 30px;
-    height: 30px;
+.display-info>img{
+    width: 40px;
+    height: 40px;
 }
 
 .image-info{
@@ -267,14 +311,64 @@ body.no-scroll{
     font-size: 20px;
     max-width: 80%;
     text-align: center;
-    transform: translateY(25%);
+    transform: translateY(15%);
     position: absolute;
     top: 100%;
-    padding: 20px;
-    margin: -75px 0 0 0;
+    padding: 10px;
+    margin: -40px 0 -20px 0;
 }
 
-/*Rating system*/
+/*Image context--------------------------*/
+.context-form{
+    color:white;
+    display: none;
+    position: absolute;
+    top: 100%;
+    transform: translateY(10%);
+    align-items: center;
+}
+
+.edit-context{
+    background: transparent;
+    cursor: pointer;
+    margin-top: 15px;
+    padding: 5px;
+    border-style: hidden;
+}
+
+.edit-context>img{
+    width: 40px;
+    height: 40px;
+}
+
+#save-context{
+    background-color: rgb(48, 153, 205);
+    color: white;
+    border: 1px solid white;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 20px;
+    font-family: Merriweather;
+    cursor: pointer;
+    margin: 10px 0 10px 0;
+    padding: 5px;
+    align-items: center;
+}
+
+/*Rating system----------------------*/
+.add-rating{
+    background: transparent;
+    cursor: pointer;
+    margin-top: 15px;
+    padding: 5px;
+    border-style: hidden;
+}
+
+.add-rating>img{
+    width: 40px;
+    height: 40px;
+}
+
 #rating-form{
     display: none;
     margin: -25px 0 0 0;
@@ -285,7 +379,7 @@ body.no-scroll{
 }
 
 #submit-rating{
-    background-color: rgb(48, 205, 106);
+    background-color: rgb(48, 153, 205);
     color: white;
     border: 1px solid white;
     border-style: hidden;
@@ -298,7 +392,21 @@ body.no-scroll{
     align-items: center;
 }
 
-/*Categories*/
+/*Download button*/
+.download{
+    background: transparent;
+    border-style: hidden;
+    cursor: pointer;
+    margin-top: 15px;
+    padding: 5px;
+}
+
+.download>img{
+    width: 30px;
+    height: 30px;
+}
+
+/*Categories------------------------*/
 .categorize{
     background: transparent;
     border: 1px solid white;
@@ -316,6 +424,7 @@ body.no-scroll{
 
 .category-dropdown {
     display: none;
+    font-family: Merriweather;
     position: absolute;
     top: 102%;
     margin: -25px 0 0 0;
@@ -330,15 +439,32 @@ body.no-scroll{
 
 .category-dropdown>button {
     padding: 5px 10px;
-    background: #007BFF;
+    background: rgb(48, 153, 205);
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+    font-family: Merriweather;
 }
 
 .category-dropdown>button:hover {
     background: #0056b3;
+}
+
+/*Tagging images------------------------------*/
+.tag-image{
+    background: transparent;
+    border: 1px solid white;
+    border-style: hidden;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    padding: 5px;
+}
+
+.tag-image>img{
+    width: 40px;
+    height: 40px;
 }
 
 .delete-btn{
@@ -374,7 +500,7 @@ body.no-scroll{
 }
 
 .light-mode .slider>button{
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.8);
     color: rgb(234, 234, 234);
 }
 
@@ -396,7 +522,7 @@ body.no-scroll{
 /*Dark Mode-----------------------------------*/
 .dark-mode{
     background-color: rgb(29, 29, 29);
-    color: white;
+    color: rgb(222, 222, 222);
 }
 
 .dark-mode nav{
@@ -427,7 +553,7 @@ body.no-scroll{
     text-decoration: none;
 }
 
-/*Light/Dark Mode Button Toggling*/
+/*Light/Dark Mode Button Toggling-----------*/
 .toggle-container {
     display: flex;
     margin-top: 50px;

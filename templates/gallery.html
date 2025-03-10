@@ -9,12 +9,18 @@
 <body>
     <header id="header">
         <h1><a href="/" style="cursor: pointer;">Lenscape</a></h1>
-
+        <div class="search-div">
+            <input type="text" id="search-input" placeholder="Search an image by tag or category">
+            <button id="search-button">
+                <img src="../static/test/magnifying-glass-16.png">
+            </button>
+            <p id="search-message"></p>
+            <button id="clear-search">Clear</button>
+        </div>
         <div class="header-btn">
-            <button type="button" onclick="window.location.href='/upload'" class="cancel-btn">Upload</button>
+            <button type="button" onclick="window.location.href='/upload'" class="upload-btn">Upload</button>
         </div>
     </header>
-
     <nav>
         <ul>
             <li><a href="/gallery">Home</a></li>
@@ -45,19 +51,23 @@
         <p>
             Click on the arrows on the sides of the image slider 
             to view the previous or next image. <br><br>
-
             To view an image at full size, simply click on the current
             image being displayed and it will display the full-sized 
-            image along with unique buttons.<br><br>
+            image along with unique buttons on the bottom of the image.<br><br>
+            To search for an image, type in a tag or category of the image
+            you want and click the magnifying glass icon. Click clear on the 
+            bottom right of the search bar to clear results.<br><br>
 
-            The image attributes will be displayed 
-            when you click on the Image Info button located
-            at the bottom of the full-size image. <br><br>
-
-            Clicking on the Rate button will display a rating
-            form prompting for a rating from 1 to 5. Click on
-            the button again to hide the form. <br><br>
-            
+            <p style="text-align: left; margin-left: 5%;">Below is a guide on what each button looks like and what they do:<br></p>
+            <ul>
+                <li>Question Mark Icon: Displays the image information (name, date, rating, etc.)<br></li>
+                <li>Pencil Icon: Lets you add a name or description for the image.<br></li>
+                <li>Star Icon: Lets you rate the image on a scale of 1 to 5.<br></li>
+                <li>Download Icon: Downloads the image and stores it on your device.<br></li>
+                <li>Menu Icon: Lets you select a category for the image.<br></li>
+                <li>Tag Icon: Lets you input a specific tag or tags for the image.<br></li>
+            </ul>
+            <br>
             To close out of full-size view, click the X
             at the top-right in the modal, or click anywhere on your
             screen aside from the image.
@@ -69,17 +79,31 @@
         <span class="close">&times;</span>
         <img class="modal-content" id="full-size-image">
         <div class="modal-buttons">
-            <button class="display-info">Image Info</button>
-            <button class="add-rating">Rate It</button>
+            <button class="display-info">
+                <img src="../static/test/info.png">
+            </button>
+            <button class="edit-context">
+                <img src="../static/test/pencil.png">
+            </button>
+            <button class="add-rating">
+                <img src="../static/test/star.png">
+            </button>
             <button class="download">
-                <img src="../static/test/pngtree-file-download-icon-image_1344466.jpg">
+                <img src="../static/test/pngtree-file-download-icon-image_1344466.png">
             </button>
             <button class="categorize">
                 <img src="../static/test/category-9.png">
             </button>
-            <button class="tag-image">+</button>
+            <button class="tag-image">
+                <img src="../static/test/tag.png">
+            </button>
         </div>
         <div id="image-info" class="image-info"></div>
+        <div id="context-form" class="context-form">
+            <p>Name:</p><input type="text" id="name-input" placeholder="Enter name"><br><br>
+            <p>Description:</p><textarea id="description-input" placeholder="Enter description"></textarea><br>
+            <button id="save-context">Save</button>
+        </div>
         <div id="rating-form" class="rating-form">
             <label for="rating-input">Rating (1-5): </label>
             <input type="number" id="rating-input" min="1" max="5" step="0.1">
