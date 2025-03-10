@@ -1,11 +1,22 @@
 {
     "1.jpg": {
-        "category": "N/A",
-        "tags": []
+        "category": "Landscape",
+        "tags": [
+            "cool"
+        ],
+        "name": "Grasshill",
+        "description": "A beautiful hill."
     },
     "10.jpg": {
-        "category": "N/A",
-        "tags": []
+        "category": "Landscape",
+        "tags": [
+            "city",
+            "night",
+            "reflection",
+            "lights"
+        ],
+        "name": "Cityscape",
+        "description": "Beautiful cityscape during nighttime"
     },
     "2.jpg": {
         "category": "N/A",
